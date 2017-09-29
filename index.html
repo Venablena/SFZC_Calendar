@@ -4,12 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <script src="https://use.fontawesome.com/35e91a5fb0.js"></script>
     <title>SFZC Calendar</title>
   </head>
   <body>
-    <div id="calendar-monthly">
-      <table></table>
-    </div>
+    <main>
+      <article id="monthly-view">
+        <section class="header-month">
+          <a class="prev" href="#"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+          <h2><span id="current-month"></span></h2>
+          <a class="next" href="#"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+        </section>
+        <section class="header-weekdays">
+        </section>
+        <section class="calendar-dates">
+        </section>
+      </article>
+    </main>
     <script type="text/javascript" src="./js/main.js"></script>
     <script type="text/javascript" src="./js/data.js"></script>
   </body>
