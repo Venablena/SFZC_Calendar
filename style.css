@@ -1,0 +1,15 @@
+section {
+  width: 100%;
+}
+
+.cell {
+  display: inline-block;
+  float: left;
+  width: 14%;
+  border: 1px solid Gray;
+  height: 90px;
+}
+
+.inactive {
+  background-color: #ddd
+}
