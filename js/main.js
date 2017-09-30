@@ -6,7 +6,8 @@ console.log ("sanity check!")
 //get current time parameters
 var today = new Date()
 const year = today.getFullYear()
-const month = today.getMonth()
+// const month = today.getMonth()
+const month = 9
 const weekday = today.getDay()
 const date = today.getDate()
 today = null //reinitialize the current date for next page load
@@ -44,7 +45,7 @@ weekdays.forEach((day)=> {
    let cellWeek = document.createElement("div")
    cellWeek.className = "cell week"
    cellWeek.textContent = day.slice(0, 3)//abbreviate weekdays
-   weekdayHeader.appendChild(cellWeek)
+   weekdayHeader.append(cellWeek)
 })
 //create calendar rows with dates: first select the correct HTML component
 const calendar = document.querySelector(".calendar-dates")
@@ -52,24 +53,45 @@ const calendar = document.querySelector(".calendar-dates")
 for (let i = 0; i < firstWeekday; i++) {
   let cellPast = document.createElement("div")
   cellPast.className = "cell inactive"
-  calendar.appendChild(cellPast)
+  calendar.append(cellPast)
 }//Do I need to reinitialize i or does firstDayOfMonth=null do the trick???
 
 //create cells with a date, starting at the first weekday of the current month until the end of the month
-let day = 0
-while (day < monthDays[month]) {
+let day = 1
+while (day <= monthDays[month]) {
   let cellCurrent = document.createElement("div")
-  cellCurrent.className = "cell current"
-  cellCurrent.textContent = day + 1
-  calendar.appendChild(cellCurrent)
+  cellCurrent.className = "cell active"
+  cellCurrent.id = (month+1) + "-" + day + "-" + year//give each cell the id of the date they represent
+  cellCurrent.textContent = day
+  calendar.append(cellCurrent)
   day += 1
 }
 
-//create empty cells to fill the last calendar row until Sat, if necessary: first find out how many items are in the calendar
+//create empty cells to fill the last calendar row, if necessary: first find out how many items are in the calendar
 let calendarSize = calendar.children
-//if it's not divisible by 7, add empty cells until it is
+//and if it's not divisible by 7, pad with empty cells until it is
 while (calendarSize.length % 7 !== 0){
   let cellFuture = document.createElement("div")
   cellFuture.className = "cell inactive"
-  calendar.appendChild(cellFuture)
+  calendar.append(cellFuture)
 }
+
+//========================================
+// Populating and formatting calendar content
+//========================================
+
+//put events in cells with an id that matches the event date
+document.querySelectorAll(".cell").forEach((item)=>{
+  for (let i = 0; i < data.length; i++) {
+    if(item.id === data[i].date){
+      let event = document.createElement("p")
+      event.className = data[i].center
+      event.textContent = data[i].name
+      item.append(event)
+    }
+    //create repeat instances for weekly and monthly events
+    // if(event.frequency === "weekly"){
+    //
+    // }
+  }
+})

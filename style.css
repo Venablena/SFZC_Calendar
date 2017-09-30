@@ -1,15 +1,22 @@
 section {
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .cell {
-  display: inline-block;
-  float: left;
-  width: 14%;
+  flex: 14%;
   border: 1px solid Gray;
-  height: 90px;
 }
 
 .inactive {
   background-color: #ddd
+}
+
+.CC {
+  background-color: pink;
+}
+
+.GG {
+  background-color: olive;
 }
