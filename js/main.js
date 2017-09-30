@@ -77,21 +77,28 @@ while (calendarSize.length % 7 !== 0){
 }
 
 //========================================
-// Populating and formatting calendar content
+// Populating calendar content
 //========================================
+//select the calendar cells that belong to the current month
+let currentMonth = document.querySelectorAll(".cell.active")
 
 //put events in cells with an id that matches the event date
-document.querySelectorAll(".cell").forEach((item)=>{
-  for (let i = 0; i < data.length; i++) {
-    if(item.id === data[i].date){
+currentMonth.forEach((calendarCell, index)=>{
+  for (let i = 0; i < events.length; i++) {
+    if(calendarCell.id === events[i].date){
       let event = document.createElement("p")
-      event.className = data[i].center
-      event.textContent = data[i].name
-      item.append(event)
+      event.className = events[i].center + " " + events[i].frequency
+      event.textContent = events[i].name
+      calendarCell.append(event)
+      //create repeat instances for weekly events:
+      if (events[i].frequency === "weekly") {
+        for (let j = index + 7; j < currentMonth.length; j += 7) {
+          let weeklyEvent = document.createElement("p")
+          weeklyEvent.className = events[i].center + " " + events[i].frequency
+          weeklyEvent.textContent = events[i].name
+          currentMonth[j].append(weeklyEvent)
+        }
+      }
     }
-    //create repeat instances for weekly and monthly events
-    // if(event.frequency === "weekly"){
-    //
-    // }
   }
 })

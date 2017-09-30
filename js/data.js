@@ -1,4 +1,4 @@
-data = [
+events = [
   {
     "name": "Eihei Dogen & Keizan Jokin Memorial",
     "frequency": "once",
