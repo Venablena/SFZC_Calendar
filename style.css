@@ -4,6 +4,11 @@ section {
   flex-wrap: wrap;
 }
 
+.header-month {
+  justify-content: space-between;
+  align-items: center;
+}
+
 .cell {
   flex: 14%;
   border: 1px solid Gray;
@@ -19,4 +24,25 @@ section {
 
 .GG {
   background-color: olive;
+}
+
+.description,
+#popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#popup {
+  background-color: yellow;
+  width: 300px;
+  height: 300px;
+}
+
+.hidden {
+  display: none;
+}
+
+.today {
+  background-color: orange;
 }

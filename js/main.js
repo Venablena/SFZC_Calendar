@@ -6,8 +6,8 @@ console.log ("sanity check!")
 //get current time parameters
 var today = new Date()
 const year = today.getFullYear()
-// const month = today.getMonth()
-const month = 9
+var month = today.getMonth()
+//const month = 9
 const weekday = today.getDay()
 const date = today.getDate()
 today = null //reinitialize the current date for next page load
@@ -81,24 +81,93 @@ while (calendarSize.length % 7 !== 0){
 //========================================
 //select the calendar cells that belong to the current month
 let currentMonth = document.querySelectorAll(".cell.active")
+var dailyView = document.querySelector("#daily-view")
+//select the hidden popup section
+let popup = document.querySelector("#popup")
+//this array is for the weekly view (later)
+var descriptionsArray = []
 
-//put events in cells with an id that matches the event date
 currentMonth.forEach((calendarCell, index)=>{
+  //find today
+  let now = ((month+1) + "-" + date + "-" + year).toString()
+  if(calendarCell.id === now){
+    calendarCell.classList.add("today")
+    now = null
+  }
+  //put events in cells with an id that matches the event date
   for (let i = 0; i < events.length; i++) {
     if(calendarCell.id === events[i].date){
       let event = document.createElement("p")
       event.className = events[i].center + " " + events[i].frequency
+      event.id = events[i].id
       event.textContent = events[i].name
       calendarCell.append(event)
+
+      //create an element with the event's description, time and center
+      descriptionsArray.push(events[i].brief)//for the weekly view
+      let startTime = document.createElement("p")
+      startTime.textContent = events[i].timeStart
+      let endTime = document.createElement("p")
+      endTime.textContent = events[i].timeEnd
+      let title = document.createElement("h3")
+      title.textContent = events[i].name
+      let center = document.createElement("p")
+      center.textContent = events[i].center
+      dailyView.append(startTime, endTime, title, center)
+      // dailyview.append(endTime)
+      // dailyview.append()
       //create repeat instances for weekly events:
-      if (events[i].frequency === "weekly") {
-        for (let j = index + 7; j < currentMonth.length; j += 7) {
-          let weeklyEvent = document.createElement("p")
-          weeklyEvent.className = events[i].center + " " + events[i].frequency
-          weeklyEvent.textContent = events[i].name
-          currentMonth[j].append(weeklyEvent)
-        }
-      }
+      // if (events[i].frequency === "weekly") {
+      //   for (let j = index + 7; j < currentMonth.length; j += 7) {
+      //     let weeklyEvent = document.createElement("p")
+      //     weeklyEvent.className = events[i].center + " " + events[i].frequency
+      //     weeklyEvent.id = events[i].id
+      //     weeklyEvent.textContent = events[i].name
+      //     currentMonth[j].append(weeklyEvent)
+      //     descriptionsArray.push(events[i].brief)
+      //   }
+      // }
     }
   }
+  //interaction
+  calendarCell.addEventListener('mouseenter', function(){
+    dailyView.classList.remove("hidden")
+    // daily.textContent = descriptionsArray[index]
+  })
+
+  calendarCell.addEventListener('mouseleave', function() {
+    dailyView.classList.add("hidden")
+  })
+})
+
+//===========================================
+// Interactions with the calendar
+//===========================================
+//select appropriate HTML element
+//let eventInstance = document.querySelectorAll("p")
+//make the event description appear in the popup on mouseenter -THIS IS FOR THE WEEKLY VIEW
+// eventInstance.forEach((paragraph, index)=>{
+//   paragraph.addEventListener('mouseenter', function(){
+//     popup.classList.remove("hidden")
+//     popup.textContent = descriptionsArray[index]
+//   })
+  //and disappear on mouseleave
+  //   paragraph.addEventListener('mouseleave', function(){
+  //   popup.classList.add("hidden")
+  //   popup.textContent = ""
+  // })
+//})
+
+//==========================================
+// Formatting the calendar
+//==========================================
+// now = document.querySelector(now)
+// console.log(now);
+
+//==========================================
+// Next & Previous month
+//==========================================
+document.querySelector(".fa-chevron-right").addEventListener('click', function(){
+  month = month + 1
+  console.log(month);
 })
