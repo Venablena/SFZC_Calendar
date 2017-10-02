@@ -8,10 +8,11 @@ console.log ("sanity check!")
 var today = new Date()
 var year = today.getFullYear()
 var month = today.getMonth()
-//const month = 9
 const weekday = today.getDay()
 const date = today.getDate()
 today = null //reinitialize the current date for next page load (???)
+
+//get
 
 //create an array with the names of months
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -37,7 +38,7 @@ var currentMonth //this becomes the selctor for the active month after it is dra
 document.addEventListener("DOMContentLoaded", function(){
   drawHeader()
   drawCalendar()
-  findToday()
+  // findToday()
 })
 
 function drawHeader(){
@@ -49,17 +50,17 @@ function drawHeader(){
      cellWeek.textContent = day.slice(0, 3)//abbreviate weekdays
      weekdayHeader.append(cellWeek)
   })
-}
+}//Does this need to return something?
 
-function findToday(){
-  currentMonth.forEach((calendarCell, index)=>{
-    let now = ((month+1) + "-" + date + "-" + year).toString()
-    if(calendarCell.id === now){
-      calendarCell.classList.add("today")
-      //now = null
-    }
-  })
-}
+//Where do I need to put this so it doesn't disappear with next/prev month navigation? Session memory?
+// function findToday(){
+//   currentMonth.forEach((calendarCell, index)=>{
+//     let now = ((month+1) + "-" + date + "-" + year).toString()
+//     if(calendarCell.id === now){
+//       calendarCell.classList.add("today")
+//     }
+//   })
+// }
 
 function drawCalendar(){
   //display the current month and year in the calendar header
@@ -83,7 +84,7 @@ function drawCalendar(){
   while (day <= monthDays[month]) {
     let cellCurrent = document.createElement("div")
     cellCurrent.className = "cell active"
-    cellCurrent.id = (month+1) + "-" + day + "-" + year//give each cell the id of the date they represent
+    cellCurrent.id = day//year + "-" + (month+1) + "-" +  //give each cell the id of the date they represent
     cellCurrent.textContent = day
     calendar.append(cellCurrent)
     day += 1
@@ -97,43 +98,59 @@ function drawCalendar(){
     cellFuture.className = "cell inactive"
     calendar.append(cellFuture)
   }
+  //call the function to fill in the events
+  populateCalendar()
+}
+
+function populateCalendar(){
+  //reformat data
+  var data = {}
+  //reorganize the event data by month/year/date
+  events.reduce(function(result, index){
+    //format the event date into a JS Date Object so that it's easier to manipulate
+    var eventFullDate = new Date (index.date + " " + index.timeStart)
+    var eventYear = eventFullDate.getFullYear()
+    var eventMonth = eventFullDate.getMonth()
+    var eventDay = eventFullDate.getDate()
+    //check if data categories already exist, if not, create them
+    if(!result.hasOwnProperty(eventYear)){
+      result[eventYear] = {}
+    }
+    if(!result[eventYear].hasOwnProperty(eventMonth)){
+      result[eventYear][eventMonth] = {}
+    }
+    if(!result[eventYear][eventMonth].hasOwnProperty(eventDay)){
+      result[eventYear][eventMonth][eventDay] = []
+    }
+    //sort the event objects into month/year/date categories
+    result[eventYear][eventMonth][eventDay].push(index)
+    return result
+  },  {})
 
   //Populating calendar content :
   //select the calendar cells that belong to the current month
-  currentMonth = document.querySelectorAll(".cell.active")
-  var dailyView = document.querySelector("#daily-view")
-  //select the hidden popup section
-  let popup = document.querySelector("#popup")
-  //this array is for the weekly view (later)
-  var descriptionsArray = []
-
-  currentMonth.forEach((calendarCell, index)=>{
-    //find today
-    // let now = ((month+1) + "-" + date + "-" + year).toString()
-    // if(calendarCell.id === now){
-    //   calendarCell.classList.add("today")
-      //now = null
-    //}
-    //put events in cells with an id that matches the event date
-    for (let i = 0; i < events.length; i++) {
-      if(calendarCell.id === events[i].date){
-        let event = document.createElement("p")
-        event.className = events[i].center + " " + events[i].frequency
-        event.id = events[i].id
-        event.textContent = events[i].name
-        calendarCell.append(event)
+  // currentMonth = document.querySelectorAll(".cell.active")
+  // currentMonth.forEach((calendarCell, index)=>{
+  //   //put events in cells with an id that matches the event date
+  //   for (let i = 0; i < events.length; i++) {
+  //     if(calendarCell.id === events[i].date){
+  //       let event = document.createElement("p")
+  //       event.className = events[i].center + " " + events[i].frequency
+  //       event.id = events[i].id
+  //       event.textContent = events[i].name
+  //       calendarCell.append(event)
 
         //create an element with the event's description, time and center
-        descriptionsArray.push(events[i].brief)//for the weekly view
-        let startTime = document.createElement("p")
-        startTime.textContent = events[i].timeStart
-        let endTime = document.createElement("p")
-        endTime.textContent = events[i].timeEnd
-        let title = document.createElement("h3")
-        title.textContent = events[i].name
-        let center = document.createElement("p")
-        center.textContent = events[i].center
-        dailyView.append(startTime, endTime, title, center)
+        //descriptionsArray.push(events[i].brief)//for the weekly view
+        // let startTime = document.createElement("p")
+        // startTime.textContent = events[i].timeStart
+        // let endTime = document.createElement("p")
+        // endTime.textContent = events[i].timeEnd
+        // let title = document.createElement("h3")
+        // title.textContent = events[i].name
+        // let center = document.createElement("p")
+        // center.textContent = events[i].center
+        // dailyView.append(startTime, endTime, title, center)
         // dailyview.append(endTime)
         // dailyview.append()
         //create repeat instances for weekly events:
@@ -147,19 +164,23 @@ function drawCalendar(){
         //     descriptionsArray.push(events[i].brief)
         //   }
         // }
-      }
-    }
-    //interaction
-    calendarCell.addEventListener('mouseenter', function(){
-      dailyView.classList.remove("hidden")
-      // daily.textContent = descriptionsArray[index]
-    })
+    //   }
+    // }
 
-    calendarCell.addEventListener('mouseleave', function() {
-      dailyView.classList.add("hidden")
-    })
-  })
-};
+  //   var dailyView = document.querySelector("#daily-view")
+  //   //select the hidden popup section
+  //   let popup = document.querySelector("#popup")
+  //   //interaction
+  //   calendarCell.addEventListener('mouseenter', function(){
+  //     dailyView.classList.remove("hidden")
+  //     // daily.textContent = descriptionsArray[index]
+  //   })
+  //
+  //   calendarCell.addEventListener('mouseleave', function() {
+  //     dailyView.classList.add("hidden")
+  //   })
+  // })
+}
 //===========================================
 // Interactions with the calendar
 //===========================================
