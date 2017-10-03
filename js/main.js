@@ -115,32 +115,64 @@ function populateCalendar(){
   console.log("populating data")
   //retrieve data in the appropriate format from another function
   data = reformatData(events)
+  eventsObject = data[year][month]
    //check if events for current year and month exist
    if(data[year][month]){
      currentMonth.forEach((calendarCell, index)=>{
        //find dates in data object that match with the calendar cell's date
-       for (let dateHasEvent in data[year][month]) {
+       for (let dateHasEvent in eventsObject) {
          if (calendarCell.id === dateHasEvent) {
            //and populate the cells with them
-           for (let i = 0; i < data[year][month][dateHasEvent].length; i++) {
+           for (let i = 0; i < eventsObject[dateHasEvent].length; i++) {
              let event = document.createElement("p")
-             event.textContent = data[year][month][dateHasEvent][i].name
+             event.textContent = eventsObject[dateHasEvent][i].name
              calendarCell.append(event)
+             calendarCell.className += " has-events"
            }
+
          }
        }
      })
    }
-   //interactions
+   //show dailyview on mouseover
    currentMonth.forEach(calendarCell => {
-     calendarCell.addEventListener('mouseenter', function(){
-       dailyView.classList.remove("hidden")
-       console.log("yo!");
-     })
+     if(calendarCell.className.includes("has-events")){
+       calendarCell.addEventListener('mouseenter', function(){
+         dailyView.classList.remove("hidden")
 
-     calendarCell.addEventListener('mouseleave', function() {
-       dailyView.classList.add("hidden")
-     })
+         for (let i = 0; i < eventsObject[calendarCell.id].length; i++) {
+           //create header with the date
+           let dailyHeader = document.createElement("div")
+           dailyHeader.className = "daily-header"
+           let header = document.createElement("h2")
+           header.textContent = months[month] + " " + calendarCell.id
+           dailyHeader.append(header)
+           //create event time information
+           let eventTime = document.createElement("div")
+           eventTime.className = "daily-time"
+           let startTime = document.createElement("p")
+           startTime.textContent = eventsObject[calendarCell.id][i].timeStart
+           let endTime = document.createElement("p")
+           endTime.textContent = eventsObject[calendarCell.id][i].timeEnd
+           eventTime.append(startTime, endTime)
+           //create event name and center information
+           let eventRow = document.createElement("div")
+           eventRow.className = "daily-event"
+           let title = document.createElement("h3")
+           title.textContent = eventsObject[calendarCell.id][i].name
+           let center = document.createElement('p')
+           center.textContent = eventsObject[calendarCell.id][i].center
+           eventRow.append(title, center)
+           dailyView.append(header, eventTime, eventRow)
+           console.log("yo!");
+         }
+       })
+
+       calendarCell.addEventListener('mouseleave', function() {
+         dailyView.classList.add("hidden")
+         dailyView.innerHTML = ""
+       })
+     }
    })
  }
   //   for (let i = 0; i < events.length; i++) {
@@ -151,19 +183,7 @@ function populateCalendar(){
   //
   //       calendarCell.append(event)
 
-        //create an element with the event's description, time and center
-        //descriptionsArray.push(events[i].brief)//for the weekly view
-        // let startTime = document.createElement("p")
-        // startTime.textContent = events[i].timeStart
-        // let endTime = document.createElement("p")
-        // endTime.textContent = events[i].timeEnd
-        // let title = document.createElement("h3")
-        // title.textContent = events[i].name
-        // let center = document.createElement("p")
-        // center.textContent = events[i].center
-        // dailyView.append(startTime, endTime, title, center)
-        // dailyview.append(endTime)
-        // dailyview.append()
+
         //create repeat instances for weekly events:
         // if (events[i].frequency === "weekly") {
         //   for (let j = index + 7; j < currentMonth.length; j += 7) {

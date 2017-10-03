@@ -4,6 +4,25 @@ section {
   flex-wrap: wrap;
 }
 
+main {
+  width: 80%;
+  display: inline-block;
+  float: left;
+}
+
+aside {
+  width: 20%;
+  display: inline-block;
+  float: right;
+}
+
+#daily-view {
+  width: 100%;
+  min-height: 200px;
+  background-color: beige;
+  display: flex;
+}
+
 .header-month {
   justify-content: space-between;
   align-items: center;
@@ -45,10 +64,4 @@ section {
 
 .today {
   background-color: orange;
-}
-
-.dailyView {
-  min-width: 500px;
-  min-height: 200px;
-  background-color: green;
 }
