@@ -46,3 +46,9 @@ section {
 .today {
   background-color: orange;
 }
+
+.dailyView {
+  min-width: 500px;
+  min-height: 200px;
+  background-color: green;
+}

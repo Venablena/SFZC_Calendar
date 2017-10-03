@@ -1,18 +1,19 @@
 console.log ("sanity check!")
+var calendar = document.querySelector(".calendar-dates")
+var dailyView = document.querySelector("#daily-view")
+var currentMonth //this becomes the selector for the active month after it is drawn
+var data
 
 //==============================
 // Setting up the calendar
 //==============================
-
 //get current time parameters
-var today = new Date()
-var year = today.getFullYear()
-var month = today.getMonth()
-const weekday = today.getDay()
-const date = today.getDate()
-today = null //reinitialize the current date for next page load (???)
-
-//get
+var now = new Date()
+var year = now.getFullYear()
+var month = now.getMonth()
+//const weekday = now.getDay()
+//const date = now.getDate()
+now = null //reinitialize the current date for next page load (???)
 
 //create an array with the names of months
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -32,8 +33,6 @@ const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 //=====================================
 // Drawing the calendar
 //=====================================
-var calendar = document.querySelector(".calendar-dates")
-var currentMonth //this becomes the selctor for the active month after it is drawn
 
 document.addEventListener("DOMContentLoaded", function(){
   drawHeader()
@@ -53,14 +52,7 @@ function drawHeader(){
 }//Does this need to return something?
 
 //Where do I need to put this so it doesn't disappear with next/prev month navigation? Session memory?
-// function findToday(){
-//   currentMonth.forEach((calendarCell, index)=>{
-//     let now = ((month+1) + "-" + date + "-" + year).toString()
-//     if(calendarCell.id === now){
-//       calendarCell.classList.add("today")
-//     }
-//   })
-// }
+
 
 function drawCalendar(){
   //display the current month and year in the calendar header
@@ -69,8 +61,6 @@ function drawCalendar(){
   //find on which weekday the month starts
   var firstDayOfMonth = new Date(year, month, 1)
   var firstWeekday = firstDayOfMonth.getDay()
-  firstDayOfMonth = null //reinitialize the parameters for next page load
-  firstWeekday = null
 
   //create empty cells until the start of the current month
   for (let i = 0; i < firstWeekday; i++) {
@@ -98,46 +88,67 @@ function drawCalendar(){
     cellFuture.className = "cell inactive"
     calendar.append(cellFuture)
   }
+  //select the calendar cells that belong to the current month so thtat htey can be used by other functions
+  currentMonth = document.querySelectorAll(".cell.active")
+  //call the function to mark today's date
+  findToday()
   //call the function to fill in the events
   populateCalendar()
 }
 
-function populateCalendar(){
-  //reformat data
-  var data = {}
-  //reorganize the event data by month/year/date
-  events.reduce(function(result, index){
-    //format the event date into a JS Date Object so that it's easier to manipulate
-    var eventFullDate = new Date (index.date + " " + index.timeStart)
-    var eventYear = eventFullDate.getFullYear()
-    var eventMonth = eventFullDate.getMonth()
-    var eventDay = eventFullDate.getDate()
-    //check if data categories already exist, if not, create them
-    if(!result.hasOwnProperty(eventYear)){
-      result[eventYear] = {}
-    }
-    if(!result[eventYear].hasOwnProperty(eventMonth)){
-      result[eventYear][eventMonth] = {}
-    }
-    if(!result[eventYear][eventMonth].hasOwnProperty(eventDay)){
-      result[eventYear][eventMonth][eventDay] = []
-    }
-    //sort the event objects into month/year/date categories
-    result[eventYear][eventMonth][eventDay].push(index)
-    return result
-  },  {})
+function findToday(){
+  //get today's date
+  let today = new Date()
+  //check that year and month match the current one
+  if((today.getFullYear() === year) && (today.getMonth() === month)){
+    //find the calendarCell that has today's date id
+    currentMonth.forEach((calendarCell)=>{
+      if(calendarCell.id === today.getDate().toString()){
+        calendarCell.className += " today"
+      }
+    })
+  }
+}
 
-  //Populating calendar content :
-  //select the calendar cells that belong to the current month
-  // currentMonth = document.querySelectorAll(".cell.active")
-  // currentMonth.forEach((calendarCell, index)=>{
-  //   //put events in cells with an id that matches the event date
+//Populating calendar content :
+function populateCalendar(){
+  console.log("populating data")
+  //retrieve data in the appropriate format from another function
+  data = reformatData(events)
+   //check if events for current year and month exist
+   if(data[year][month]){
+     currentMonth.forEach((calendarCell, index)=>{
+       //find dates in data object that match with the calendar cell's date
+       for (let dateHasEvent in data[year][month]) {
+         if (calendarCell.id === dateHasEvent) {
+           //and populate the cells with them
+           for (let i = 0; i < data[year][month][dateHasEvent].length; i++) {
+             let event = document.createElement("p")
+             event.textContent = data[year][month][dateHasEvent][i].name
+             calendarCell.append(event)
+           }
+         }
+       }
+     })
+   }
+   //interactions
+   currentMonth.forEach(calendarCell => {
+     calendarCell.addEventListener('mouseenter', function(){
+       dailyView.classList.remove("hidden")
+       console.log("yo!");
+     })
+
+     calendarCell.addEventListener('mouseleave', function() {
+       dailyView.classList.add("hidden")
+     })
+   })
+ }
   //   for (let i = 0; i < events.length; i++) {
   //     if(calendarCell.id === events[i].date){
-  //       let event = document.createElement("p")
+  //
   //       event.className = events[i].center + " " + events[i].frequency
   //       event.id = events[i].id
-  //       event.textContent = events[i].name
+  //
   //       calendarCell.append(event)
 
         //create an element with the event's description, time and center
@@ -165,45 +176,53 @@ function populateCalendar(){
         //   }
         // }
     //   }
-    // }
+    //===========================================
+    // Interactions with the calendar
+    //===========================================
+    //select the hidden popup section
 
-  //   var dailyView = document.querySelector("#daily-view")
-  //   //select the hidden popup section
-  //   let popup = document.querySelector("#popup")
-  //   //interaction
-  //   calendarCell.addEventListener('mouseenter', function(){
-  //     dailyView.classList.remove("hidden")
-  //     // daily.textContent = descriptionsArray[index]
-  //   })
-  //
-  //   calendarCell.addEventListener('mouseleave', function() {
-  //     dailyView.classList.add("hidden")
-  //   })
-  // })
+      //let popup = document.querySelector("#popup")
+
+    //select appropriate HTML element
+    //let eventInstance = document.querySelectorAll("p")
+    //make the event description appear in the popup on mouseenter -THIS IS FOR THE WEEKLY VIEW
+    // eventInstance.forEach((paragraph, index)=>{
+    //   paragraph.addEventListener('mouseenter', function(){
+    //     popup.classList.remove("hidden")
+    //     popup.textContent = descriptionsArray[index]
+    //   })
+      //and disappear on mouseleave
+      //   paragraph.addEventListener('mouseleave', function(){
+      //   popup.classList.add("hidden")
+      //   popup.textContent = ""
+      // })
+    //})
+
+
+function reformatData(eventData){
+  //reorganize the event data by month/year/date so that it can be used to populate the calendar
+  let reformattedData = eventData.reduce(function(result, item){
+    //format the event date into a JS Date Object so that it's easier to manipulate
+    var eventFullDate = new Date (item.date + " " + item.timeStart)
+    var eventYear = eventFullDate.getFullYear()
+    var eventMonth = eventFullDate.getMonth()
+    var eventDay = eventFullDate.getDate()
+    //check if data categories already exist, if not, create them
+    if(!result.hasOwnProperty(eventYear)){
+      result[eventYear] = {}
+    }
+    if(!result[eventYear].hasOwnProperty(eventMonth)){
+      result[eventYear][eventMonth] = {}
+    }
+    if(!result[eventYear][eventMonth].hasOwnProperty(eventDay)){
+      result[eventYear][eventMonth][eventDay] = []
+    }
+    //sort the event objects into month/year/date categories
+    result[eventYear][eventMonth][eventDay].push(item)
+    return result
+  },  {})
+  return reformattedData
 }
-//===========================================
-// Interactions with the calendar
-//===========================================
-//select appropriate HTML element
-//let eventInstance = document.querySelectorAll("p")
-//make the event description appear in the popup on mouseenter -THIS IS FOR THE WEEKLY VIEW
-// eventInstance.forEach((paragraph, index)=>{
-//   paragraph.addEventListener('mouseenter', function(){
-//     popup.classList.remove("hidden")
-//     popup.textContent = descriptionsArray[index]
-//   })
-  //and disappear on mouseleave
-  //   paragraph.addEventListener('mouseleave', function(){
-  //   popup.classList.add("hidden")
-  //   popup.textContent = ""
-  // })
-//})
-
-//==========================================
-// Formatting the calendar
-//==========================================
-// now = document.querySelector(now)
-// console.log(now);
 
 //==========================================
 // Next & Previous month
@@ -233,6 +252,7 @@ document.querySelector(".fa-chevron-left").addEventListener('click', function(){
     year -= 1
   }
   drawCalendar()
+  console.log(month);
   // let cells = document.querySelectorAll(".cell.active")
   // cells.forEach((calendarCell)=>{
   //   calendarCell.classList.remove("today")
