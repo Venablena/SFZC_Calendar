@@ -1,0 +1,135 @@
+/* Basic formatting after resetting the browser styles */
+html {
+  font-size: 16px
+  font-family: 'Raleway', 'Arial', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Slabo 27px', 'Helvetica', serif;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 1.5rem 0;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin: 1.25rem 0;
+}
+
+h3 {
+  font-size: 1.5rem;
+  /*margin: 1rem 0;*/
+}
+
+h4 {
+  font-size: 1.25rem;
+  /*margin: 0.75rem 0;*/
+}
+
+p {
+  padding: 0.5rem;
+}
+
+section {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+main {
+  width: 70%;
+  display: inline-block;
+  float: left;
+  margin-left: 5%;
+}
+
+aside {
+  width: 20%;
+  display: inline-block;
+  float: right;
+  margin-right: 5%;
+}
+
+#daily-view {
+  /*width: 100%;
+  min-height: 200px;
+  background-color: beige;
+  /*display: flex;*/
+  margin: 5%;
+  /*padding: 10%;*/
+}
+
+.daily-header {
+  background-color: maroon;
+  color: white;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 25px 25px 0 0;
+}
+/* container for daily view event, time and center */
+.event-row {
+  width: 100%;
+  background-color: beige;
+  /*margin: 5%;*/
+  padding: 10%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.daily-time {
+  width: 20%;
+  padding-right: 5%;
+}
+
+.daily-event {
+  width: 80%;
+  padding-left: 5%;
+  flex-direction: column;
+}
+
+.header-month {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cell {
+  flex: 14%;
+  border: 1px solid Gray;
+}
+
+.inactive {
+  background-color: #ddd
+}
+
+.CC {
+  background-color: pink;
+}
+
+.GG {
+  background-color: olive;
+}
+
+.description,
+#popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#popup {
+  background-color: yellow;
+  width: 300px;
+  height: 300px;
+}
+
+.hidden {
+  display: none;
+}
+
+.today {
+  background-color: orange;
+}

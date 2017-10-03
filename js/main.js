@@ -117,7 +117,7 @@ function populateCalendar(){
   data = reformatData(events)
   eventsObject = data[year][month]
    //check if events for current year and month exist
-   if(data[year][month]){
+   if(eventsObject){
      currentMonth.forEach((calendarCell, index)=>{
        //find dates in data object that match with the calendar cell's date
        for (let dateHasEvent in eventsObject) {
@@ -126,6 +126,7 @@ function populateCalendar(){
            for (let i = 0; i < eventsObject[dateHasEvent].length; i++) {
              let event = document.createElement("p")
              event.textContent = eventsObject[dateHasEvent][i].name
+             event.className = eventsObject[dateHasEvent][i].center
              calendarCell.append(event)
              calendarCell.className += " has-events"
            }
@@ -139,31 +140,35 @@ function populateCalendar(){
      if(calendarCell.className.includes("has-events")){
        calendarCell.addEventListener('mouseenter', function(){
          dailyView.classList.remove("hidden")
+         //create header with the date
+         let dailyHeader = document.createElement("div")
+         dailyHeader.className = "daily-header"
+         let header = document.createElement("h2")
+         header.textContent = months[month] + " " + calendarCell.id
+         dailyHeader.append(header)
+         dailyView.append(dailyHeader)
 
          for (let i = 0; i < eventsObject[calendarCell.id].length; i++) {
-           //create header with the date
-           let dailyHeader = document.createElement("div")
-           dailyHeader.className = "daily-header"
-           let header = document.createElement("h2")
-           header.textContent = months[month] + " " + calendarCell.id
-           dailyHeader.append(header)
+           let eventRow = document.createElement("div")
+           eventRow.className = "event-row"
            //create event time information
            let eventTime = document.createElement("div")
            eventTime.className = "daily-time"
-           let startTime = document.createElement("p")
+           let startTime = document.createElement("h3")
            startTime.textContent = eventsObject[calendarCell.id][i].timeStart
-           let endTime = document.createElement("p")
+           let endTime = document.createElement("h3")
            endTime.textContent = eventsObject[calendarCell.id][i].timeEnd
            eventTime.append(startTime, endTime)
            //create event name and center information
-           let eventRow = document.createElement("div")
-           eventRow.className = "daily-event"
-           let title = document.createElement("h3")
+           let dailyEvent = document.createElement("div")
+           dailyEvent.className = "daily-event"
+           let title = document.createElement("h4")
            title.textContent = eventsObject[calendarCell.id][i].name
            let center = document.createElement('p')
            center.textContent = eventsObject[calendarCell.id][i].center
-           eventRow.append(title, center)
-           dailyView.append(header, eventTime, eventRow)
+           dailyEvent.append(title, center)
+           eventRow.append(eventTime, dailyEvent)
+           dailyView.append(eventRow)
            console.log("yo!");
          }
        })
@@ -241,6 +246,7 @@ function reformatData(eventData){
     result[eventYear][eventMonth][eventDay].push(item)
     return result
   },  {})
+  console.log(reformattedData);
   return reformattedData
 }
 
