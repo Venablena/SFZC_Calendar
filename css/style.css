@@ -1,12 +1,13 @@
 /* Basic formatting after resetting the browser styles */
-html {
-  font-size: 16px
+* {
+  font-size: 16px;
   font-family: 'Raleway', 'Arial', sans-serif;
+  box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, h6 {
+/*h1, h2, h3, h4, h5, h6 {
   font-family: 'Slabo 27px', 'Helvetica', serif;
-}
+}*/
 
 h1 {
   font-size: 2.5rem;
@@ -30,7 +31,10 @@ h4 {
 
 p {
   padding: 0.5rem;
+  line-height: 125%;
 }
+
+/* Calendar formatting */
 
 section {
   width: 100%;
@@ -69,48 +73,68 @@ aside {
   text-align: center;
   border-radius: 25px 25px 0 0;
 }
+
+.daily-brief {
+  width: 100%;
+}
 /* container for daily view event, time and center */
 .event-row {
   width: 100%;
   background-color: beige;
   /*margin: 5%;*/
-  padding: 10%;
+  padding: 5%;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .daily-time {
-  width: 20%;
+  flex: 1;
   padding-right: 5%;
 }
 
 .daily-event {
-  width: 80%;
+  flex: 5;
   padding-left: 5%;
   flex-direction: column;
 }
 
 .header-month {
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+}
+
+i {
+    padding: 0 15px;
 }
 
 .cell {
   flex: 14%;
-  border: 1px solid Gray;
+  border: 1px dashed LightGray;
 }
 
-.inactive {
-  background-color: #ddd
+.cell.week {
+  border: 0;
+}
+
+.header-weekdays {
+  background-color: maroon;
+  color: white;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.5rem 0;
+  border-radius: 25px 25px 0 0;
 }
 
 .CC {
-  background-color: pink;
+  background-color: #fabf85;
+  color: maroon;
 }
 
 .GG {
-  background-color: olive;
+  background-color: #e6e600;
+  color: #4d4d00;
 }
 
 .description,
@@ -130,6 +154,25 @@ aside {
   display: none;
 }
 
+/* table cell colors */
+.inactive {
+  background-color: #ddd
+}
+
+.active {
+  background-color: rgb(222, 237, 222);
+}
+
+.has-events {
+  background-color: #fdfdd3;
+}
+
+.daily-brief,
+.has-events:hover {
+  background-color: #defdd3;
+}
+
 .today {
-  background-color: orange;
+  background-color: #baf7ba;
+  border: 4px solid #5eed5e;
 }

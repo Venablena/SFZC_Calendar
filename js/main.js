@@ -56,7 +56,7 @@ function drawHeader(){
 
 function drawCalendar(){
   //display the current month and year in the calendar header
-  document.getElementById("current-month").textContent = months[month] + year
+  document.getElementById("current-month").textContent = months[month] + " " + year
 
   //find on which weekday the month starts
   var firstDayOfMonth = new Date(year, month, 1)
@@ -140,6 +140,7 @@ function populateCalendar(){
      if(calendarCell.className.includes("has-events")){
        calendarCell.addEventListener('mouseenter', function(){
          dailyView.classList.remove("hidden")
+         dailyView.innerHTML = ""
          //create header with the date
          let dailyHeader = document.createElement("div")
          dailyHeader.className = "daily-header"
@@ -164,18 +165,26 @@ function populateCalendar(){
            dailyEvent.className = "daily-event"
            let title = document.createElement("h4")
            title.textContent = eventsObject[calendarCell.id][i].name
-           let center = document.createElement('p')
-           center.textContent = eventsObject[calendarCell.id][i].center
+           let center = document.createElement('div')
+           if(eventsObject[calendarCell.id][i].center == "CC"){
+             center.textContent = "City Center"
+           }else if (eventsObject[calendarCell.id][i].center == "GG") {
+             center.textContent = "Green Gulch Farm"
+           }
+           let briefRow = document.createElement("div")
+           let dailyBrief = document.createElement("p")
+           briefRow.className = "daily-brief"
+           dailyBrief.textContent = eventsObject[calendarCell.id][i].brief
            dailyEvent.append(title, center)
            eventRow.append(eventTime, dailyEvent)
-           dailyView.append(eventRow)
-           console.log("yo!");
+           briefRow.append(dailyBrief)
+           eventRow.className += " " + eventsObject[calendarCell.id][i].center
+           dailyView.append(eventRow, briefRow)
          }
        })
 
        calendarCell.addEventListener('mouseleave', function() {
-         dailyView.classList.add("hidden")
-         dailyView.innerHTML = ""
+        //  dailyView.classList.add("hidden")
        })
      }
    })
