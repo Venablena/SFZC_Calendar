@@ -2,7 +2,7 @@ console.log ("sanity check!")
 var calendar = document.querySelector(".calendar-dates")
 var dailyView = document.querySelector("#daily-view")
 var currentMonth //this becomes the selector for the active month after it is drawn
-var data
+var data //this is used to reformat the event data so that the calendar content can be gnerated from it
 
 //==============================
 // Setting up the calendar
@@ -12,9 +12,11 @@ var now = new Date()
 var year = now.getFullYear()
 var month = now.getMonth()
 //const weekday = now.getDay()
-//const date = now.getDate()
-now = null //reinitialize the current date for next page load (???)
-
+var date = now.getDate()
+// now = null //reinitialize the current date for next page load (???)
+console.log(year);
+console.log(month);
+console.log(date);
 //create an array with the names of months
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -37,7 +39,7 @@ const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frida
 document.addEventListener("DOMContentLoaded", function(){
   drawHeader()
   drawCalendar()
-  // findToday()
+  populateDailyView(data[year][month][date], date) //generate today's daily view
 })
 
 function drawHeader(){
@@ -50,9 +52,6 @@ function drawHeader(){
      weekdayHeader.append(cellWeek)
   })
 }//Does this need to return something?
-
-//Where do I need to put this so it doesn't disappear with next/prev month navigation? Session memory?
-
 
 function drawCalendar(){
   //display the current month and year in the calendar header
@@ -74,7 +73,7 @@ function drawCalendar(){
   while (day <= monthDays[month]) {
     let cellCurrent = document.createElement("div")
     cellCurrent.className = "cell active"
-    cellCurrent.id = day//year + "-" + (month+1) + "-" +  //give each cell the id of the date they represent
+    cellCurrent.id = day //give each cell the id of the date they represent
     cellCurrent.textContent = day
     calendar.append(cellCurrent)
     day += 1
@@ -88,7 +87,7 @@ function drawCalendar(){
     cellFuture.className = "cell inactive"
     calendar.append(cellFuture)
   }
-  //select the calendar cells that belong to the current month so thtat htey can be used by other functions
+  //select the calendar cells that belong to the current month so that they can be used by other functions
   currentMonth = document.querySelectorAll(".cell.active")
   //call the function to mark today's date
   findToday()
@@ -110,7 +109,7 @@ function findToday(){
   }
 }
 
-//Populating calendar content :
+//populating calendar content
 function populateCalendar(){
   console.log("populating data")
   //retrieve data in the appropriate format from another function
@@ -130,108 +129,64 @@ function populateCalendar(){
              calendarCell.append(event)
              calendarCell.className += " has-events"
            }
-
          }
+       }
+       //add a mouseover event on cells with events only to show the daily view
+       if(calendarCell.className.includes("has-events")){
+         calendarCell.addEventListener('mouseenter', function(){
+            populateDailyView(eventsObject[calendarCell.id], calendarCell.id)
+         })
        }
      })
    }
-   //show dailyview on mouseover
-   currentMonth.forEach(calendarCell => {
-     if(calendarCell.className.includes("has-events")){
-       calendarCell.addEventListener('mouseenter', function(){
-         dailyView.classList.remove("hidden")
-         dailyView.innerHTML = ""
-         //create header with the date
-         let dailyHeader = document.createElement("div")
-         dailyHeader.className = "daily-header"
-         let header = document.createElement("h2")
-         header.textContent = months[month] + " " + calendarCell.id
-         dailyHeader.append(header)
-         dailyView.append(dailyHeader)
-
-         for (let i = 0; i < eventsObject[calendarCell.id].length; i++) {
-           let eventRow = document.createElement("div")
-           eventRow.className = "event-row"
-           //create event time information
-           let eventTime = document.createElement("div")
-           eventTime.className = "daily-time"
-           let startTime = document.createElement("h3")
-           startTime.textContent = eventsObject[calendarCell.id][i].timeStart
-           let endTime = document.createElement("h3")
-           endTime.textContent = eventsObject[calendarCell.id][i].timeEnd
-           eventTime.append(startTime, endTime)
-           //create event name and center information
-           let dailyEvent = document.createElement("div")
-           dailyEvent.className = "daily-event"
-           let title = document.createElement("h4")
-           title.textContent = eventsObject[calendarCell.id][i].name
-           let center = document.createElement('div')
-           if(eventsObject[calendarCell.id][i].center == "CC"){
-             center.textContent = "City Center"
-           }else if (eventsObject[calendarCell.id][i].center == "GG") {
-             center.textContent = "Green Gulch Farm"
-           }
-           let briefRow = document.createElement("div")
-           let dailyBrief = document.createElement("p")
-           briefRow.className = "daily-brief"
-           dailyBrief.textContent = eventsObject[calendarCell.id][i].brief
-           dailyEvent.append(title, center)
-           eventRow.append(eventTime, dailyEvent)
-           briefRow.append(dailyBrief)
-           eventRow.className += " " + eventsObject[calendarCell.id][i].center
-           dailyView.append(eventRow, briefRow)
-         }
-       })
-
-       calendarCell.addEventListener('mouseleave', function() {
-        //  dailyView.classList.add("hidden")
-       })
-     }
-   })
  }
-  //   for (let i = 0; i < events.length; i++) {
-  //     if(calendarCell.id === events[i].date){
-  //
-  //       event.className = events[i].center + " " + events[i].frequency
-  //       event.id = events[i].id
-  //
-  //       calendarCell.append(event)
 
-
-        //create repeat instances for weekly events:
-        // if (events[i].frequency === "weekly") {
-        //   for (let j = index + 7; j < currentMonth.length; j += 7) {
-        //     let weeklyEvent = document.createElement("p")
-        //     weeklyEvent.className = events[i].center + " " + events[i].frequency
-        //     weeklyEvent.id = events[i].id
-        //     weeklyEvent.textContent = events[i].name
-        //     currentMonth[j].append(weeklyEvent)
-        //     descriptionsArray.push(events[i].brief)
-        //   }
-        // }
-    //   }
-    //===========================================
-    // Interactions with the calendar
-    //===========================================
-    //select the hidden popup section
-
-      //let popup = document.querySelector("#popup")
-
-    //select appropriate HTML element
-    //let eventInstance = document.querySelectorAll("p")
-    //make the event description appear in the popup on mouseenter -THIS IS FOR THE WEEKLY VIEW
-    // eventInstance.forEach((paragraph, index)=>{
-    //   paragraph.addEventListener('mouseenter', function(){
-    //     popup.classList.remove("hidden")
-    //     popup.textContent = descriptionsArray[index]
-    //   })
-      //and disappear on mouseleave
-      //   paragraph.addEventListener('mouseleave', function(){
-      //   popup.classList.add("hidden")
-      //   popup.textContent = ""
-      // })
-    //})
-
+//populating the daily view
+function populateDailyView(item, day){
+  console.log("daily view is running");
+  // console.log("this is the item:" + item);
+      dailyView.innerHTML = ""
+      //create header with the date
+      let dailyHeader = document.createElement("div")
+      dailyHeader.className = "daily-header"
+      let header = document.createElement("h2")
+      header.textContent = months[month] + " " + day
+      dailyHeader.append(header)
+      dailyView.append(dailyHeader)
+      //go through the day's events and fill the daily view with their info
+      for (let i = 0; i < item.length; i++) {
+        let eventRow = document.createElement("div")
+        eventRow.className = "event-row"
+        //create event time information
+        let eventTime = document.createElement("div")
+        eventTime.className = "daily-time"
+        let startTime = document.createElement("h3")
+        startTime.textContent = item[i].timeStart
+        let endTime = document.createElement("h3")
+        endTime.textContent = item[i].timeEnd
+        eventTime.append(startTime, endTime)
+        //create event name and center information
+        let dailyEvent = document.createElement("div")
+        dailyEvent.className = "daily-event"
+        let title = document.createElement("h4")
+        title.textContent = item[i].name
+        let center = document.createElement('div')
+        if(item[i].center == "CC"){
+          center.textContent = "City Center"
+        }else if (item[i].center == "GG") {
+          center.textContent = "Green Gulch Farm"
+        }
+        let briefRow = document.createElement("div")
+        let dailyBrief = document.createElement("p")
+        briefRow.className = "daily-brief"
+        dailyBrief.textContent = item[i].brief
+        dailyEvent.append(title, center)
+        eventRow.append(eventTime, dailyEvent)
+        briefRow.append(dailyBrief)
+        eventRow.className += " " + item[i].center
+        dailyView.append(eventRow, briefRow)
+      }
+}
 
 function reformatData(eventData){
   //reorganize the event data by month/year/date so that it can be used to populate the calendar
@@ -255,7 +210,6 @@ function reformatData(eventData){
     result[eventYear][eventMonth][eventDay].push(item)
     return result
   },  {})
-  console.log(reformattedData);
   return reformattedData
 }
 
@@ -271,11 +225,6 @@ document.querySelector(".fa-chevron-right").addEventListener('click', function()
     year += 1
   }
   drawCalendar()
-  //remove today
-  // let cells = document.querySelectorAll(".cell.active")
-  // cells.forEach((calendarCell)=>{
-  //   calendarCell.classList.remove("today")
-  // })
 })
 
 document.querySelector(".fa-chevron-left").addEventListener('click', function(){
@@ -287,6 +236,7 @@ document.querySelector(".fa-chevron-left").addEventListener('click', function(){
     year -= 1
   }
   drawCalendar()
+  console.log(year)
   console.log(month);
   // let cells = document.querySelectorAll(".cell.active")
   // cells.forEach((calendarCell)=>{
