@@ -117,7 +117,7 @@ function populateCalendar(){
   eventsObject = data[year][month]
    //check if events for current year and month exist
    if(eventsObject){
-     currentMonth.forEach((calendarCell, index)=>{
+     currentMonth.forEach(calendarCell =>{
        //find dates in data object that match with the calendar cell's date
        for (let dateHasEvent in eventsObject) {
          if (calendarCell.id === dateHasEvent) {
@@ -176,16 +176,31 @@ function populateDailyView(item, day){
         }else if (item[i].center == "GG") {
           center.textContent = "Green Gulch Farm"
         }
+        let hidden = document.createElement("div")
+        hidden.innerHTML = "<i class='fa fa-check-circle-o fa-2x' aria-hidden='true'></i>" + " " + "Click here to save to My Events"
+        hidden.className = "event-over hidden"
         let briefRow = document.createElement("div")
         let dailyBrief = document.createElement("p")
         briefRow.className = "daily-brief"
         dailyBrief.textContent = item[i].brief
         dailyEvent.append(title, center)
-        eventRow.append(eventTime, dailyEvent)
+        eventRow.append(eventTime, dailyEvent, hidden)
         briefRow.append(dailyBrief)
         eventRow.className += " " + item[i].center
         dailyView.append(eventRow, briefRow)
+        //call a function to be able to add events to my events
+        eventRow.addEventListener('mouseenter', function(){
+          hidden.classList.remove("hidden")
+        })
+        eventRow.addEventListener('mouseleave', function(){
+          hidden.classList.add("hidden")
+        })
+        eventRow.addEventListener('click', function(){
+          addToMyEvents(eventRow)
+        })
       }
+
+      // addToMyEvents(document.querySelector("#daily-view").children)
 }
 
 function reformatData(eventData){
@@ -214,8 +229,9 @@ function reformatData(eventData){
 }
 
 //==========================================
-// Next & Previous month
+// Interactions
 //==========================================
+//next and previous month
 document.querySelector(".fa-chevron-right").addEventListener('click', function(){
   calendar.innerHTML = "" //Find a better way!?
   if(month < 11){
@@ -238,8 +254,11 @@ document.querySelector(".fa-chevron-left").addEventListener('click', function(){
   drawCalendar()
   console.log(year)
   console.log(month);
-  // let cells = document.querySelectorAll(".cell.active")
-  // cells.forEach((calendarCell)=>{
-  //   calendarCell.classList.remove("today")
-  // })
 })
+
+//my events
+function addToMyEvents(element){
+  let placeholder = document.querySelector("#placeholder")
+  placeholder.innerHTML = ""
+  placeholder.innerHTML = element.innerHTML
+}

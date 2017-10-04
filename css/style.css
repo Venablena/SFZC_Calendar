@@ -11,12 +11,12 @@
 
 h1 {
   font-size: 2.5rem;
-  margin: 1.5rem 0;
+  margin-bottom: 1.5rem;
 }
 
 h2 {
   font-size: 1.75rem;
-  margin: 1.25rem 0;
+  margin-bottom: 1.25rem;
 }
 
 h3 {
@@ -34,8 +34,11 @@ p {
   line-height: 125%;
 }
 
-/* Calendar formatting */
+.fa-chevron-left, .fa-chevron-right {
+    padding: 0 15px;
+}
 
+/* Page formatting */
 section {
   width: 100%;
   display: flex;
@@ -56,56 +59,26 @@ aside {
   margin-right: 5%;
 }
 
-#daily-view {
-  /*width: 100%;
-  min-height: 200px;
-  background-color: beige;
-  /*display: flex;*/
-  margin: 5%;
-  /*padding: 10%;*/
-}
-
-.daily-header {
-  background-color: maroon;
-  color: white;
-  width: 100%;
-  padding: 1rem;
-  text-align: center;
-  border-radius: 25px 25px 0 0;
-}
-
-.daily-brief {
-  width: 100%;
-}
-/* container for daily view event, time and center */
-.event-row {
-  width: 100%;
-  background-color: beige;
-  /*margin: 5%;*/
-  padding: 5%;
+.my-events {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  border: 1px solid maroon;
+  padding: 25px;
+  margin-top: 10px;
+  margin-bottom: 50px;
 }
 
-.daily-time {
-  flex: 1;
-  padding-right: 5%;
+#placeholder {
+  color: maroon;
 }
 
-.daily-event {
-  flex: 5;
-  padding-left: 5%;
-  flex-direction: column;
-}
+/* Calendar formatting */
+/* Monthly view */
 
 .header-month {
   justify-content: space-around;
   align-items: center;
-}
-
-i {
-    padding: 0 15px;
 }
 
 .cell {
@@ -137,23 +110,6 @@ i {
   color: #4d4d00;
 }
 
-.description,
-#popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#popup {
-  background-color: yellow;
-  width: 300px;
-  height: 300px;
-}
-
-.hidden {
-  display: none;
-}
-
 /* table cell colors */
 .inactive {
   background-color: #ddd
@@ -175,4 +131,57 @@ i {
 .today {
   background-color: #baf7ba;
   border: 4px solid #5eed5e;
+}
+
+/* Daily view */
+#daily-view {
+  margin: 5%;
+}
+
+.daily-header {
+  background-color: maroon;
+  color: white;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 25px 25px 0 0;
+}
+
+.daily-brief {
+  width: 100%;
+}
+
+.daily-time {
+  flex: 1;
+  padding-right: 5%;
+}
+
+.daily-event {
+  flex: 5;
+  padding-left: 5%;
+  flex-direction: column;
+}
+/* container to hold event, time and center */
+.event-row, .event-over {
+  display: flex;
+  align-items: center;
+}
+
+.event-row {
+  position: relative;
+  width: 100%;
+  padding: 5%;
+}
+
+.event-over {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+  max-height: 100%;
+  padding: 20px;
+  color: white;
+}
+
+.hidden {
+  display: none;
 }
