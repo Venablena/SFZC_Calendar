@@ -261,37 +261,42 @@ document.querySelector(".fa-chevron-left").addEventListener('click', function(){
 })
 
 //my events
-//on mouseclick add the event to my events
+//add and fetch events from local storage
 function addToMyEvents(element){
-  // placeholder = document.querySelector("#placeholder")
+  //get the date in the header
+  let time = document.createElement("div")
+  time.innerHTML = element.parentNode.firstChild.innerHTML
   let content = document.createElement("div")
-  content.innerHTML = element.innerHTML
+  content.className = "my-event-row"
+  content.append(time)
+  content.innerHTML += element.innerHTML
+  //add a close button
   let close = document.createElement("div")
   close.className = "close"
-  close.innerHTML = "<i class='fa fa-times fa-lg' aria-hidden='true'></i><span>  Remove</span>"
+  close.innerHTML = "<i class='fa fa-times fa-lg' aria-hidden='true'></i>"
   content.append(close)
   placeholder.append(content)
-  //save event to local storage
-  localStorage.setItem("myEvent", placeholder.innerHTML)
+  saveMyEvents()
   //call the function to remove events
   removeMyEvents()
-    // localStorage.removeItem("myEvent")
-    // close.parentNode.remove()
-  //})
+}
+
+function saveMyEvents(){
+  localStorage.setItem("myEvent", placeholder.innerHTML)
 }
 
 function removeMyEvents(){
   let item = document.querySelectorAll(".close")
   item.forEach(el =>{
     el.addEventListener('click', function(){
-      localStorage.removeItem("myEvent")
       el.parentNode.remove()
+      saveMyEvents()
     })
   })
 }
 
 function loadMyEvents(){
-  if(localStorage.getItem("myEvent") !== undefined){
+  if(localStorage.getItem("myEvent")){
     let eventStored = localStorage.getItem("myEvent")
     placeholder.innerHTML = eventStored
     removeMyEvents()

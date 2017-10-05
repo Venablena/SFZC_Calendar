@@ -71,31 +71,33 @@ aside {
 }
 
 .my-events > h2 {
-  flex: 100%;
+  margin-bottom: 0;
 }
 
 #placeholder {
   display: flex;
   flex-direction: column;
   flex: 100%;
-  justify-content: space-between;
+  /*justify-content: space-between;*/
   color: maroon;
 }
 
-#placeholder > div {
+#placeholder div {
   display: flex;
-  border-bottom: 1px dashed maroon;
-  padding-top: 20px;
+  padding: 10px;
 }
 
-#placeholder > div:last-child {
+#placeholder > div {
+  border-bottom: 1px dashed maroon;
+}
+
+#placeholder div:last-child {
   border-bottom: none;
 }
 
-/*#placeholder > .event-over {
-  display: none;
-}*/
+.my-event_row {
 
+}
 /* Calendar formatting */
 /* Monthly view */
 
@@ -206,5 +208,5 @@ aside {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
