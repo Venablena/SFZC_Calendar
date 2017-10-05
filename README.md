@@ -20,6 +20,6 @@ Clone this repository to your local computer and open 'index.html'
 
 ## Next Steps 
 
--[ ]Display events in the order of their start time
--[ ]Automatically populate recurring events
--[ ]Reformat time to AM/PM
+-[ ] Display events in the order of their start time
+-[ ] Automatically populate recurring events
+-[ ] Reformat time to AM/PM
