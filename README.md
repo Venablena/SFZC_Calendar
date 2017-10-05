@@ -11,14 +11,14 @@ This calendar app is a response to a very unfriendly user experience of trying t
 
 The two location of Zen Center are easy to tell apart because of their distinct color-codes.
 
-![]Screenshot_calendar.png
+![](Screenshot_calendar.png)
 > [Demo here](http://strange-kiss.surge.sh)
 
-##Installation
+## Installation
 
 Clone this repository to your local computer and open 'index.html'
 
-##Next Steps 
+## Next Steps 
 
 -[ ]Display events in the order of their start time
 -[ ]Automatically populate recurring events
