@@ -1,6 +1,7 @@
 console.log ("sanity check!")
 var calendar = document.querySelector(".calendar-dates")
 var dailyView = document.querySelector("#daily-view")
+var placeholder = document.querySelector("#placeholder")//this is used for my events
 var currentMonth //this becomes the selector for the active month after it is drawn
 var data //this is used to reformat the event data so that the calendar content can be gnerated from it
 
@@ -93,6 +94,8 @@ function drawCalendar(){
   findToday()
   //call the function to fill in the events
   populateCalendar()
+  //call the function to load stored events in my events
+  loadMyEvents()
 }
 
 function findToday(){
@@ -177,7 +180,7 @@ function populateDailyView(item, day){
           center.textContent = "Green Gulch Farm"
         }
         let hidden = document.createElement("div")
-        hidden.innerHTML = "<i class='fa fa-check-circle-o fa-2x' aria-hidden='true'></i>" + " " + "Click here to save to My Events"
+        hidden.innerHTML = "<i class='fa fa-check-circle-o fa-2x' aria-hidden='true'></i><span>  Click here to save to My Events</span>"
         hidden.className = "event-over hidden"
         let briefRow = document.createElement("div")
         let dailyBrief = document.createElement("p")
@@ -196,6 +199,7 @@ function populateDailyView(item, day){
           hidden.classList.add("hidden")
         })
         eventRow.addEventListener('click', function(){
+          hidden.classList.add("hidden")
           addToMyEvents(eventRow)
         })
       }
@@ -257,8 +261,39 @@ document.querySelector(".fa-chevron-left").addEventListener('click', function(){
 })
 
 //my events
+//on mouseclick add the event to my events
 function addToMyEvents(element){
-  let placeholder = document.querySelector("#placeholder")
-  placeholder.innerHTML = ""
-  placeholder.innerHTML = element.innerHTML
+  // placeholder = document.querySelector("#placeholder")
+  let content = document.createElement("div")
+  content.innerHTML = element.innerHTML
+  let close = document.createElement("div")
+  close.className = "close"
+  close.innerHTML = "<i class='fa fa-times fa-lg' aria-hidden='true'></i><span>  Remove</span>"
+  content.append(close)
+  placeholder.append(content)
+  //save event to local storage
+  localStorage.setItem("myEvent", placeholder.innerHTML)
+  //call the function to remove events
+  removeMyEvents()
+    // localStorage.removeItem("myEvent")
+    // close.parentNode.remove()
+  //})
+}
+
+function removeMyEvents(){
+  let item = document.querySelectorAll(".close")
+  item.forEach(el =>{
+    el.addEventListener('click', function(){
+      localStorage.removeItem("myEvent")
+      el.parentNode.remove()
+    })
+  })
+}
+
+function loadMyEvents(){
+  if(localStorage.getItem("myEvent") !== undefined){
+    let eventStored = localStorage.getItem("myEvent")
+    placeholder.innerHTML = eventStored
+    removeMyEvents()
+  }
 }

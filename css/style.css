@@ -61,6 +61,7 @@ aside {
 
 .my-events {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   border: 1px solid maroon;
@@ -69,9 +70,31 @@ aside {
   margin-bottom: 50px;
 }
 
+.my-events > h2 {
+  flex: 100%;
+}
+
 #placeholder {
+  display: flex;
+  flex-direction: column;
+  flex: 100%;
+  justify-content: space-between;
   color: maroon;
 }
+
+#placeholder > div {
+  display: flex;
+  border-bottom: 1px dashed maroon;
+  padding-top: 20px;
+}
+
+#placeholder > div:last-child {
+  border-bottom: none;
+}
+
+/*#placeholder > .event-over {
+  display: none;
+}*/
 
 /* Calendar formatting */
 /* Monthly view */
