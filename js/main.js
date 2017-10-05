@@ -205,10 +205,10 @@ function reformatData(eventData){
   //reorganize the event data by month/year/date so that it can be used to populate the calendar
   let reformattedData = eventData.reduce(function(result, item){
     //format the event date into a JS Date Object so that it's easier to manipulate
-    let eventFullDate = new Date (item.date + " " + item.timeStart)
-    let eventYear = eventFullDate.getFullYear()
-    let eventMonth = eventFullDate.getMonth()
-    let eventDay = eventFullDate.getDate()
+    var eventFullDate = new Date (item.date + " " + item.timeStart)
+    var eventYear = eventFullDate.getFullYear()
+    var eventMonth = eventFullDate.getMonth()
+    var eventDay = eventFullDate.getDate()
     //check if data categories already exist, if not, create them
     if(!result.hasOwnProperty(eventYear)){
       result[eventYear] = {}
@@ -220,53 +220,66 @@ function reformatData(eventData){
       result[eventYear][eventMonth][eventDay] = []
     }
     //sort the event objects into month/year/date categories
-    eventArray = result[eventYear][eventMonth][eventDay]
-    if(eventArray.length > 0){
-      eventArray = sortDates(eventArray, item)
-    }else{eventArray.push(item)}
+    result[eventYear][eventMonth][eventDay].push(item)
     return result
   },  {})
   return reformattedData
 }
 
- function sortDates(array, newItem){
-   let newArray = []
-   let i = 0
-      while((newItem.timeStart > array[i].timeStart)&& i < array.length){
-        i++ }
-        // console.log(newItem.timeStart + newItem.name + newItem.date);
-        // console.log(array[i].timeStart + array[i].name + array[i].date);
-        newArray = array.slice(0, i+1)
-        console.log(newArray);
-        let temp = array.slice(i+1, array.length)
-        newArray.push(newItem)
-        // console.log(newArray);
-        newArray = newArray.concat(temp)
-        // console.log(newArray);
-      //}
-      // else{
-      //   newArray = newArray.push(newItem)
-      //   // console.log(newArray);
-      // }
-    //}
-    return newArray
- }
+//1st try
+// function sortDates(array, newItem){
+//     //debugger
+//     let i = array.length-1
+//     while ((i >= 0) && (newItem.timeStart < array[i].timeStart)) {
+//       i--
+//     }
+//     let newArray = array.slice(0, i+1)
+//     let temp = array.slice(i+1, array.length)
+//     newArray.push(newItem)
+//     newArray = newArray.concat(temp)
+// console.log(newArray);
+//     return newArray
+//  }
 
- //put events in order by their start time:
- // if(eventArray.length > 0){
- //   for (let i = 0; i < eventArray.length; i++) {
- //     let j = eventArray.length-1
- //     while((item.timeStart < eventArray[j].timeStart) && (j=>0)){
- //       j--
- //     }
- //     let newArray = eventArray.slice(0, j+1)
- //     let temp = eventArray.slice(j+1, eventArray.length)
- //     newArray.push(item)
- //     newArray = newArray.concat(temp)
- //     eventArray = newArray
- //     // console.log("put me earlier than this " + item.timeStart + " " + eventArray[i].timeStart);
- //   }
+// function sortDates(array, newItem){
+//   let newArray = []
+//      for (let i = 0; i < array.length; i++) {      if(newItem.timeStart < array[i].timeStart){
+//         newArray = array.slice(0, i)
+//         let temp = array.slice(i+1, array.length)
+//         newArray.push(newItem)
+//         newArray = newArray.concat(temp)
+//         console.log(newArray);
+//       }
+//     }
+//     return newArray
+//   }
+
+//mess?
+ // function sortDates(array, newItem){
+ //   let newArray = []
+ //   let i = 0
+ //      while((newItem.timeStart < array[i].timeStart)&& i < array.length){
+ //        i-- }
+ //        // console.log(newItem.timeStart + newItem.name + newItem.date);
+ //        // console.log(array[i].timeStart + array[i].name + array[i].date);
+ //        newArray = array.slice(0, i+1)
+ //        console.log(newArray);
+ //        let temp = array.slice(i+1, array.length)
+ //        newArray.push(newItem)
+ //        // console.log(newArray);
+ //        newArray = newArray.concat(temp)
+ //        // console.log(newArray);
+ //      //}
+ //      // else{
+ //      //   newArray = newArray.push(newItem)
+ //      //   // console.log(newArray);
+ //      // }
+ //    //}
+ //    return newArray
  // }
+
+
+
 //==========================================
 // Interactions
 //==========================================
