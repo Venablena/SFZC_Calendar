@@ -229,6 +229,24 @@ function reformatData(eventData){
     result[eventYear][eventMonth][eventDay].push(item)
     return result
   },  {})
+  Object.keys(reformattedData).forEach(year => {
+    Object.keys(reformattedData[year]).forEach(month => {
+      //console.log('day', day)
+      Object.keys(reformattedData[year][month]).forEach(dayOfMonth => {
+        reformattedData[year][month][dayOfMonth].sort((event1, event2) => {
+          if (event1.timeStart < event2.timeStart) return -1
+          return 1
+        })
+        /*
+        reformattedData[year][month][dayOfMonth].forEach(event => {
+          console.log('event', event)
+        })
+        */
+      })
+    })
+  })
+  debugger
+  //reformattedData
   return reformattedData
 }
 
