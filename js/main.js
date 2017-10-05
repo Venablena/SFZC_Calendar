@@ -4,6 +4,7 @@ var dailyView = document.querySelector("#daily-view")
 var placeholder = document.querySelector("#placeholder")//this is used for my events
 var currentMonth //this becomes the selector for the active month after it is drawn
 var data //this is used to reformat the event data so that the calendar content can be gnerated from it
+var eventArray //this will hold reformatted data so that it can be sorted by another function
 
 //==============================
 // Setting up the calendar
@@ -101,7 +102,7 @@ function drawCalendar(){
 function findToday(){
   //get today's date
   let today = new Date()
-  //check that year and month match the current one
+  //check that current year and month match the ones displayed in the calendar
   if((today.getFullYear() === year) && (today.getMonth() === month)){
     //find the calendarCell that has today's date id
     currentMonth.forEach((calendarCell)=>{
@@ -118,13 +119,12 @@ function populateCalendar(){
   //retrieve data in the appropriate format from another function
   data = reformatData(events)
   eventsObject = data[year][month]
-   //check if events for current year and month exist
+   //check if there are events for current year and month
    if(eventsObject){
      currentMonth.forEach(calendarCell =>{
-       //find dates in data object that match with the calendar cell's date
+       //then check on which dates and match them with calendar cell id's
        for (let dateHasEvent in eventsObject) {
          if (calendarCell.id === dateHasEvent) {
-           //and populate the cells with them
            for (let i = 0; i < eventsObject[dateHasEvent].length; i++) {
              let event = document.createElement("p")
              event.textContent = eventsObject[dateHasEvent][i].name
@@ -203,18 +203,16 @@ function populateDailyView(item, day){
           addToMyEvents(eventRow)
         })
       }
-
-      // addToMyEvents(document.querySelector("#daily-view").children)
 }
 
 function reformatData(eventData){
   //reorganize the event data by month/year/date so that it can be used to populate the calendar
   let reformattedData = eventData.reduce(function(result, item){
     //format the event date into a JS Date Object so that it's easier to manipulate
-    var eventFullDate = new Date (item.date + " " + item.timeStart)
-    var eventYear = eventFullDate.getFullYear()
-    var eventMonth = eventFullDate.getMonth()
-    var eventDay = eventFullDate.getDate()
+    let eventFullDate = new Date (item.date + " " + item.timeStart)
+    let eventYear = eventFullDate.getFullYear()
+    let eventMonth = eventFullDate.getMonth()
+    let eventDay = eventFullDate.getDate()
     //check if data categories already exist, if not, create them
     if(!result.hasOwnProperty(eventYear)){
       result[eventYear] = {}
@@ -226,12 +224,42 @@ function reformatData(eventData){
       result[eventYear][eventMonth][eventDay] = []
     }
     //sort the event objects into month/year/date categories
-    result[eventYear][eventMonth][eventDay].push(item)
+    eventArray = result[eventYear][eventMonth][eventDay]
+    if(eventArray.length > 0){
+      eventArray = sortDates(eventArray, item)
+    }else{eventArray.push(item)}
     return result
   },  {})
   return reformattedData
 }
 
+ function sortDates(array, newItem){
+    for (let i = 0; i < array.length; i++) {
+      if(newItem.timeStart < array[i].timeStart){
+        let newArray = array.slice(0, i+1)
+        let temp = array.slice(i+1, array.length)
+        newArray.push(newItem)
+        newArray = newArray.concat(temp)
+      }
+      return newArray
+    }
+ }
+
+ //put events in order by their start time:
+ // if(eventArray.length > 0){
+ //   for (let i = 0; i < eventArray.length; i++) {
+ //     let j = eventArray.length-1
+ //     while((item.timeStart < eventArray[j].timeStart) && (j=>0)){
+ //       j--
+ //     }
+ //     let newArray = eventArray.slice(0, j+1)
+ //     let temp = eventArray.slice(j+1, eventArray.length)
+ //     newArray.push(item)
+ //     newArray = newArray.concat(temp)
+ //     eventArray = newArray
+ //     // console.log("put me earlier than this " + item.timeStart + " " + eventArray[i].timeStart);
+ //   }
+ // }
 //==========================================
 // Interactions
 //==========================================
