@@ -12,7 +12,7 @@ This calendar app is a response to a very unfriendly user experience of trying t
 The two location of Zen Center are easy to tell apart because of their distinct color-codes.
 
 ![](Screenshot_calendar.png)
-> [Demo here](http://strange-kiss.surge.sh)
+> [Demo here](http://venablena-calendar.surge.sh)
 
 ## Installation
 
@@ -22,5 +22,4 @@ Clone this repository to your local computer and open 'index.html'
 
 * Display events in the order of their start time
 * Automatically populate recurring events
-* Reformat time to AM/PM
-* Filter events by type and practice center
+* Grey out past dates
