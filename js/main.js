@@ -15,9 +15,6 @@ var month = now.getMonth()
 //const weekday = now.getDay()
 var date = now.getDate()
 // now = null //reinitialize the current date for next page load (???)
-console.log(year);
-console.log(month);
-console.log(date);
 //create an array with the names of months
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
@@ -114,7 +111,6 @@ function findToday(){
 
 //populating calendar content
 function populateCalendar(){
-  console.log("populating data")
   //retrieve data in the appropriate format from another function
   data = reformatData(events)
   eventsObject = data[year][month]
@@ -146,7 +142,6 @@ function populateCalendar(){
 
 //populating the daily view
 function populateDailyView(item, day){
-  console.log("daily view is running");
   // console.log("this is the item:" + item);
       dailyView.innerHTML = ""
       //create header with the date
@@ -203,8 +198,6 @@ function populateDailyView(item, day){
           addToMyEvents(eventRow)
         })
       }
-
-      // addToMyEvents(document.querySelector("#daily-view").children)
 }
 
 function reformatData(eventData){
@@ -229,24 +222,18 @@ function reformatData(eventData){
     result[eventYear][eventMonth][eventDay].push(item)
     return result
   },  {})
+
+  //use the native sort method to put the events in order by their start time (thanks Charlie!!!!)
   Object.keys(reformattedData).forEach(year => {
     Object.keys(reformattedData[year]).forEach(month => {
-      //console.log('day', day)
       Object.keys(reformattedData[year][month]).forEach(dayOfMonth => {
         reformattedData[year][month][dayOfMonth].sort((event1, event2) => {
           if (event1.timeStart < event2.timeStart) return -1
           return 1
         })
-        /*
-        reformattedData[year][month][dayOfMonth].forEach(event => {
-          console.log('event', event)
-        })
-        */
       })
     })
   })
-  debugger
-  //reformattedData
   return reformattedData
 }
 
