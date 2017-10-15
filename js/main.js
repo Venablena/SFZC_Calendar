@@ -307,3 +307,7 @@ function loadMyEvents(){
     removeMyEvents()
   }
 }
+
+module.exports = {
+  'leapYear': leapYear
+}
