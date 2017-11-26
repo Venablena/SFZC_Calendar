@@ -20,6 +20,6 @@ Clone this repository to your local computer and open 'index.html'
 
 ## Next Steps 
 
-* Display events in the order of their start time
+* Connect the calendar view to the event interface and database to complete the admin experience
 * Automatically populate recurring events
 * Grey out past dates
